@@ -13,7 +13,7 @@ const boxes = [
   {key: null, boxes: [{key: null, boxes: null}]}
 ]
 
-export const recursion = (inputBoxes: any[]): any => {
+export const recursion = (inputBoxes: any[]): any[] | string => {
   const inputBoxesCopy = [...inputBoxes]
 
   if (!inputBoxesCopy[0]) {
