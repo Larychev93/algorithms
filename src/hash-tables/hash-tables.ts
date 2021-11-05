@@ -1,4 +1,4 @@
-class HashTable {
+export class HashTable {
   table: Array<any>;
 
   constructor() {
@@ -23,18 +23,26 @@ class HashTable {
     return hash % this.table.length;
   }
 
-  set(data: any) {
+  set(data: any): void {
     const position = this.hash(data);
 
     this.table[position] = data;
   }
 
-  get(key: string) {
-    return this.table[this.hash(key)];
+  get(key: string): any {
+    return this.table[this.hash(key)] || null;
+  }
+
+  remove(key: string) {
+    this.table.splice(this.table.findIndex(item => item === key), 1)
   }
 }
 
-class HashTableLinear extends HashTable {
+
+/**
+ * Алгоритм хэш таблиц с техникой линейного зондирования для разрешения колизий
+ */
+export class HashTableLinear extends HashTable {
   values: any[]
 
   constructor() {
@@ -76,6 +84,19 @@ class HashTableLinear extends HashTable {
       console.log(key, value, ' : ', this.values[parseInt(key)]);
     }
   }
+
+  remove(key: string): void {
+    const hash = this.hash(key);
+
+    for (let i = hash; this.table[i] !== undefined; i++) {
+      if (this.table[i] === key) {
+        const indexToRemove = this.table.findIndex(item => item === key)
+
+        this.values.splice(indexToRemove, 1);
+        this.table.splice(indexToRemove, 1);
+      }
+    }
+  }
 }
 
 const ht = new HashTable();
@@ -84,13 +105,9 @@ for (let i = 0; i < 500; i++) {
   ht.set('Canada' + i)
 }
 
-console.log(ht.get('Canada290'))
-
 const htWithLinear = new HashTableLinear();
 
 for (let i = 0; i < 500; i++) {
   htWithLinear.set('Canada' + i, i)
 }
-
-console.log(htWithLinear.get('Canada290'))
 
